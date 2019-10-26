@@ -1,40 +1,50 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 import Card from "react-bootstrap/Card";
+import { Player } from "../../node_modules/video-react";
+import "../../node_modules/video-react/dist/video-react.css";
 
-
-export default function ImageCard() {
-  const [data, setData] = useState({});
-
-  useEffect(() => {
-    axios
-      .get(
-        `https://api.nasa.gov/planetary/apod?api_key=jad07zoq0RscmTZa5rSyscaha1LUNUHLm3ztewE0&`
-      )
-      .then(res => {
-        console.log(res.data);
-        setData(res.data);
-      });
-  }, []);
-
+export default function ImageCard(props) {
   return (
     <Card
       style={{
-        margin: "0 25%",
+        display: "flex",
+        flexDirection: "column",
+        margin: "20px 20%",
         border: "3px solid black"
       }}
     >
-      <Card.Title>{data.title}</Card.Title>
+      <Card.Title>{props.title}</Card.Title>
       <Card.Subtitle style={{ marginBottom: ".75rem" }}>
-        {data.copyright}
+        {props.copyright}
       </Card.Subtitle>
-      <Card.Img
-        src={data.url}
-        alt={data.title}
-        style={{
-          border: "1px solid black"
-        }}
-      />
+
+      {props.mediatype === "image" && (
+        <Card.Img
+          src={props.url}
+          alt={props.title}
+          style={{
+            objectFit: "scale"
+          }}
+        />
+      )}
+
+      {props.mediatype === "video" && (
+        <div className="embed-responsive">
+          <iframe
+            id="ytplayer"
+            type="text/html"
+            src={props.url}
+            fs='0'
+            style={{
+              display: 'flex',
+              margin: '0 auto',
+              width:'800px',
+              height:'600px'
+            }}
+          />
+        </div>
+      )}
+
       <Card.Body>
         <Card.Text
           style={{
@@ -43,7 +53,7 @@ export default function ImageCard() {
             margin: "5px"
           }}
         >
-          {data.explanation}
+          {props.explanation}
         </Card.Text>
       </Card.Body>
     </Card>
